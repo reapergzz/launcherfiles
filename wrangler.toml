@@ -1,0 +1,8 @@
+name = "launcher-download"
+main = "index.js"
+compatibility_date = "2026-02-08"
+
+[[r2_buckets]]
+binding = "FILES_BUCKET"      # must match index.js
+bucket_name = "files"         # your R2 bucket name
+preview_bucket_name = "files"
