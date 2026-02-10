@@ -1,8 +1,13 @@
-name = "launcher-download"
-main = "index.js"
-compatibility_date = "2026-02-08"
+export default {
+  async fetch(request, env, ctx) {
+    const OBJECT_KEY = "launcher.exe"; // your file in R2
+    const object = await env.FILES_BUCKET.get(OBJECT_KEY); // Fetch file from R2 using the correct bucket binding
+    if (!object) return new Response("File not found", { status: 404 });
 
-[[r2_buckets]]
-binding = "FILES_BUCKET"      # must match the variable in index.js
-bucket_name = "myfiles"       # your R2 bucket name
-preview_bucket_name = "myfiles"
+    const headers = new Headers();
+    headers.set("Content-Type", object.httpMetadata.contentType || "application/octet-stream");
+    headers.set("Content-Disposition", `attachment; filename=${OBJECT_KEY}`);
+
+    return new Response(object.body, { headers });
+  }
+}
